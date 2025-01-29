@@ -2,7 +2,6 @@
 
 <div style="display: flex;">
 <img style="height: 450px;" src="src/img/ilustracao.png" alt="">
-<img style="height: 450px;" src="src/img/ilustracao2.png" alt="">
 
 <p>Este é um projeto simples de um Sistema de Login realizado em ReactJS contendo Autenticação, Context API, e Hooks.</p> <br/>
 
