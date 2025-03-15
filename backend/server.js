@@ -8,8 +8,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const app = express();
-const PORT = process.env.PORT || 5173;
-
+const port = process.env.PORT || 3000;
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server is running on port ${port}`);
+});
 app.use(cors());
 app.use(bodyParser.json());
 
