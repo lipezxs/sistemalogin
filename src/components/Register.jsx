@@ -25,14 +25,12 @@ const Register = () => {
         }
 
         try {
-            // Substitua a URL abaixo pela URL do seu backend no Render
-            await axios.post('https://sistemalogin-l5e0.onrender.com/', { username, email, password });
-            
-            // Redireciona para a página de login após o registro
+            const response = await axios.post('https://sistemalogin-l5e0.onrender.com/register', { username, email, password });
+            console.log('Resposta do backend:', response.data); // Log para depuração
             navigate('/login');
         } catch (err) {
+            console.error('Erro na requisição:', err); // Log para depuração
             if (err.response) {
-                // Erros do backend
                 setError(err.response.data.message);
             } else {
                 setError('Erro ao conectar ao servidor');
