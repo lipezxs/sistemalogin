@@ -25,8 +25,11 @@ const Register = () => {
         }
 
         try {
-            await axios.post('http://localhost:5000/register', { username, email, password });
-            navigate('/login'); // Redireciona para a página de login após o cadastro
+            // Substitua a URL abaixo pela URL do seu backend no Render
+            await axios.post('https://sistemalogin-l5e0.onrender.com/', { username, email, password });
+            
+            // Redireciona para a página de login após o registro
+            navigate('/login');
         } catch (err) {
             if (err.response) {
                 // Erros do backend
@@ -40,14 +43,21 @@ const Register = () => {
     return (
         <motion.div
             className="auth-container"
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, y: -50 }} // Animação inicial
+            animate={{ opacity: 1, y: 0 }} // Animação ao carregar
+            transition={{ duration: 0.5 }} // Duração da animação
         >
             <h2>Registro</h2>
-            {error && <motion.p className="error-message" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                {error}
-            </motion.p>}
+            {error && (
+                <motion.p
+                    className="error-message"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    {error}
+                </motion.p>
+            )}
             <form onSubmit={handleSubmit} className="auth-form">
                 <motion.input
                     type="text"
@@ -55,8 +65,8 @@ const Register = () => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: 1.05 }} // Efeito ao passar o mouse
+                    whileTap={{ scale: 0.95 }} // Efeito ao clicar
                 />
                 <motion.input
                     type="email"

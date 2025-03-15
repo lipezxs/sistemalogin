@@ -1,10 +1,13 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vite.dev/config/
-export default {
+export default defineConfig({
+  plugins: [react()],
   server: {
     host: '0.0.0.0', // Escuta em todas as interfaces de rede
-    port: process.env.PORT || 5173, // Usa a porta do Render ou 5173 como fallback
+    port: process.env.PORT || 5173, // Usa a porta do ambiente ou 5173 como fallback
   },
-};
+  preview: {
+    port: process.env.PORT || 5173, // Porta para o comando `vite preview`
+  },
+});

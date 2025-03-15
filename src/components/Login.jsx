@@ -8,6 +8,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,10 +20,15 @@ const Login = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:5000/login', { email, password });
+            // Substitua a URL abaixo pela URL do seu backend no Render
+            const response = await axios.post('https://sistemalogin-l5e0.onrender.com/login', { email, password });
+            
+            // Armazena o token e o nome de usuário no localStorage
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('username', response.data.username);
-            navigate('/home'); // Redireciona para a página home
+            
+            // Redireciona para a página home
+            navigate('/home');
         } catch (err) {
             if (err.response) {
                 // Erros do backend
@@ -41,9 +47,16 @@ const Login = () => {
             transition={{ duration: 0.5 }} // Duração da animação
         >
             <h2>Login</h2>
-            {error && <motion.p className="error-message" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                {error}
-            </motion.p>}
+            {error && (
+                <motion.p
+                    className="error-message"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    {error}
+                </motion.p>
+            )}
             <form onSubmit={handleSubmit} className="auth-form">
                 <motion.input
                     type="email"

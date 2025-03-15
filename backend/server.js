@@ -5,13 +5,25 @@ const mysql = require('mysql2');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173', // Permite a origem do frontend
+    credentials: true,
+}));
 app.use(express.json()); // Substitui o body-parser
+
+// Serve arquivos estáticos do frontend (se estiver no mesmo projeto)
+app.use(express.static(path.join(__dirname, 'build')));
+
+// Rota para o frontend
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 // Conexão com o banco de dados
 const db = mysql.createConnection({
@@ -83,5 +95,3 @@ app.post('/login', (req, res) => {
 app.listen(port, '0.0.0.0', () => {
     console.log(`Servidor rodando na porta ${port}`);
 });
-
-
