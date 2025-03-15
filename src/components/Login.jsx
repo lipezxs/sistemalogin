@@ -8,7 +8,6 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,16 +19,18 @@ const Login = () => {
         }
 
         try {
-            // Substitua a URL abaixo pela URL do seu backend no Render
+            console.log('Enviando requisição de login:', { email, password }); // Log para depuração
             const response = await axios.post('https://sistemalogin-l5e0.onrender.com/login', { email, password });
-            
+            console.log('Resposta do backend:', response.data); // Log para depuração
+
             // Armazena o token e o nome de usuário no localStorage
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('username', response.data.username);
-            
+
             // Redireciona para a página home
             navigate('/home');
         } catch (err) {
+            console.error('Erro na requisição:', err); // Log para depuração
             if (err.response) {
                 // Erros do backend
                 setError(err.response.data.message);
