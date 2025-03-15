@@ -12,10 +12,10 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const db = mysql.createConnection({
-    host: 'localhost',
+    host: 'mysql.railway.internal',
     user: 'root',
-    password: 'Fa876593',
-    database: 'sistema_login'
+    password: 'OlRHcNhnmFAlDRnymYUynrGSuOlmqpRT',
+    database: 'railway'
 });
 
 db.connect(err => {
