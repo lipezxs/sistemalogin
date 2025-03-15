@@ -5,8 +5,16 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const express = require('express');
 const app = express();
-const PORT = 5000;
+
+// Use the PORT environment variable from Render
+const PORT = process.env.PORT || 3000;
+
+// Start the server
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
 app.use(cors());
 app.use(bodyParser.json());
