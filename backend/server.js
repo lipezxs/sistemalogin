@@ -2,19 +2,18 @@ require('dotenv').config(); // Carrega as variáveis do .env
 
 const express = require('express');
 const mysql = require('mysql2');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const app = express();
 const port = process.env.PORT || 3000;
-app.listen(port, '0.0.0.0', () => {
-  console.log(`Server is running on port ${port}`);
-});
-app.use(cors());
-app.use(bodyParser.json());
 
+// Middlewares
+app.use(cors());
+app.use(express.json()); // Substitui o body-parser
+
+// Conexão com o banco de dados
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -30,9 +29,11 @@ db.connect(err => {
     }
 });
 
+// Funções de validação
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const validatePassword = (password) => password.length >= 6;
 
+// Rota de registro
 app.post('/register', async (req, res) => {
     const { username, email, password } = req.body;
 
@@ -57,6 +58,7 @@ app.post('/register', async (req, res) => {
     });
 });
 
+// Rota de login
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
 
@@ -77,4 +79,7 @@ app.post('/login', (req, res) => {
     });
 });
 
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+// Iniciar o servidor
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Servidor rodando na porta ${port}`);
+});
