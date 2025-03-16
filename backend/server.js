@@ -5,14 +5,11 @@ const mysql = require('mysql2');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middlewares
-const cors = require("cors");
-
+// Middleware CORS
 app.use(cors({
   origin: "https://dashboardfs.vercel.app", // Permite apenas esse domínio
   methods: ["GET", "POST"], // Métodos permitidos
@@ -21,29 +18,25 @@ app.use(cors({
 
 app.use(express.json()); // Substitui o body-parser
 
-// Serve arquivos estáticos do frontend (se estiver no mesmo projeto)
-app.use(express.static(path.join(__dirname, 'build')));
-
-// Rota para o frontend
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
 // Conexão com o banco de dados
-const db = mysql.createConnection({
+const db = mysql.createPool({
     host: process.env.DB_HOST,
-    port: process.env.DB_PORT, // Adicione a porta aqui
+    port: process.env.DB_PORT,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
-    connectTimeout: 10000, // Aumenta o tempo limite para 10 segundos
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
-db.connect(err => {
+// Testa a conexão
+db.getConnection((err, connection) => {
     if (err) {
         console.error('Erro ao conectar ao MySQL:', err);
     } else {
         console.log('Conectado ao MySQL');
+        connection.release();
     }
 });
 
@@ -53,7 +46,7 @@ const validatePassword = (password) => password.length >= 6;
 
 // Rota de registro
 app.post('/register', async (req, res) => {
-    console.log('Requisição de registro recebida:', req.body); // Log para depuração
+    console.log('Requisição de registro recebida:', req.body);
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
@@ -66,7 +59,7 @@ app.post('/register', async (req, res) => {
     const checkEmailQuery = 'SELECT * FROM users WHERE email = ?';
     db.query(checkEmailQuery, [email], async (err, results) => {
         if (err) {
-            console.error('Erro ao verificar email:', err); // Log para depuração
+            console.error('Erro ao verificar email:', err);
             return res.status(500).json({ message: 'Erro ao verificar email' });
         }
         if (results.length > 0) return res.status(400).json({ message: 'Email já cadastrado' });
@@ -75,17 +68,18 @@ app.post('/register', async (req, res) => {
         const insertQuery = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
         db.query(insertQuery, [username, email, hashedPassword], (err, result) => {
             if (err) {
-                console.error('Erro ao registrar usuário:', err); // Log para depuração
+                console.error('Erro ao registrar usuário:', err);
                 return res.status(500).json({ message: 'Erro ao registrar usuário' });
             }
-            console.log('Usuário registrado com sucesso:', result); // Log para depuração
-            res.status(201).json({ message: 'Usuário registrado com sucesso' });
+            console.log('Usuário registrado com sucesso:', result);
+            return res.status(201).json({ message: 'Usuário registrado com sucesso' });
         });
     });
 });
 
+// Rota de login
 app.post('/login', (req, res) => {
-    console.log('Requisição de login recebida:', req.body); // Log para depuração
+    console.log('Requisição de login recebida:', req.body);
     const { email, password } = req.body;
 
     if (!email || !password) return res.status(400).json({ message: 'Email e senha são obrigatórios' });
@@ -101,9 +95,10 @@ app.post('/login', (req, res) => {
         if (!isPasswordValid) return res.status(401).json({ message: 'Senha incorreta' });
 
         const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token, username: user.username });
+        return res.json({ token, username: user.username });
     });
 });
+
 // Iniciar o servidor
 app.listen(port, '0.0.0.0', () => {
     console.log(`Servidor rodando na porta ${port}`);
