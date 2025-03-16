@@ -11,10 +11,14 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Middlewares
+const cors = require("cors");
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173', // Permite a origem do frontend
-    credentials: true,
+  origin: "https://dashboardfs.vercel.app", // Permite apenas esse domínio
+  methods: ["GET", "POST"], // Métodos permitidos
+  allowedHeaders: ["Content-Type"] // Cabeçalhos permitidos
 }));
+
 app.use(express.json()); // Substitui o body-parser
 
 // Serve arquivos estáticos do frontend (se estiver no mesmo projeto)
