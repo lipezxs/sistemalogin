@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -27,7 +26,7 @@ const Register = () => {
         }
 
         try {
-            const response = await axios.post(`${API_URL}/register`, { username, email, password });
+            await axios.post('https://sistemalogin-l5e0.onrender.com/register', { username, email, password });
             console.log('Resposta do backend:', response.data);
             navigate('/login');
         } catch (err) {

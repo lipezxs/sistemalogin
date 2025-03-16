@@ -10,11 +10,8 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware CORS
-app.use(cors({
-  origin: "https://dashboardfs.vercel.app", // Permite apenas esse domínio
-  methods: ["GET", "POST"], // Métodos permitidos
-  allowedHeaders: ["Content-Type"] // Cabeçalhos permitidos
-}));
+app.use(cors());
+
 
 app.use(express.json()); // Substitui o body-parser
 
