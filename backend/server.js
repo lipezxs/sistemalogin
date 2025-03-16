@@ -18,8 +18,9 @@ app.use(cors({
 
 app.use(express.json()); // Substitui o body-parser
 
-// Conexão com o banco de dados
-const db = mysql.createPool({
+require('dotenv').config(); // Carregar as variáveis do .env
+
+const pool = mysql.createPool({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     user: process.env.DB_USER,
@@ -27,11 +28,12 @@ const db = mysql.createPool({
     database: process.env.DB_DATABASE,
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 0
+    queueLimit: 0,
 });
 
-// Testa a conexão
-db.getConnection((err, connection) => {
+module.exports = pool;
+
+pool.getConnection((err, connection) => {
     if (err) {
         console.error('Erro ao conectar ao MySQL:', err);
     } else {
