@@ -6,7 +6,7 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 
 const app = express();
-const port = process.env.PORT || 10000; // Porta 10000
+const port = process.env.PORT || 10000;
 
 app.use(cors({
     origin: 'https://sistemalogin-frontend.onrender.com', // URL do frontend
