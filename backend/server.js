@@ -1,5 +1,4 @@
-require('dotenv').config();
-
+require('dotenv').config(); // Carrega as variáveis de ambiente do arquivo .env
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
