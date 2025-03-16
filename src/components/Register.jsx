@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -25,34 +27,26 @@ const Register = () => {
         }
 
         try {
-            const response = await axios.post('https://sistemalogin-l5e0.onrender.com/register', { username, email, password });
-            console.log('Resposta do backend:', response.data); // Log para depuração
+            const response = await axios.post(`${API_URL}/register`, { username, email, password });
+            console.log('Resposta do backend:', response.data);
             navigate('/login');
         } catch (err) {
-            console.error('Erro na requisição:', err); // Log para depuração
-            if (err.response) {
-                setError(err.response.data.message);
-            } else {
-                setError('Erro ao conectar ao servidor');
-            }
+            console.error('Erro na requisição:', err);
+            setError(err.response?.data?.message || 'Erro ao conectar ao servidor');
         }
     };
 
+    const animationProps = useMemo(() => ({
+        initial: { opacity: 0, y: -50 },
+        animate: { opacity: 1, y: 0 },
+        transition: { duration: 0.5 },
+    }), []);
+
     return (
-        <motion.div
-            className="auth-container"
-            initial={{ opacity: 0, y: -50 }} // Animação inicial
-            animate={{ opacity: 1, y: 0 }} // Animação ao carregar
-            transition={{ duration: 0.5 }} // Duração da animação
-        >
+        <motion.div className="auth-container" {...animationProps}>
             <h2>Registro</h2>
             {error && (
-                <motion.p
-                    className="error-message"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                >
+                <motion.p className="error-message" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
                     {error}
                 </motion.p>
             )}
@@ -62,16 +56,14 @@ const Register = () => {
                     placeholder="Nome de usuário"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    required
-                    whileHover={{ scale: 1.05 }} // Efeito ao passar o mouse
-                    whileTap={{ scale: 0.95 }} // Efeito ao clicar
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                 />
                 <motion.input
                     type="email"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    required
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                 />
@@ -80,12 +72,12 @@ const Register = () => {
                     placeholder="Senha"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    required
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                 />
                 <motion.button
                     type="submit"
+                    aria-label="Registrar"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                 >
