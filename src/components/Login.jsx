@@ -14,20 +14,21 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         if (!email || !password) {
             setError('Email e senha são obrigatórios');
             return;
         }
-
+    
         try {
             console.log('Enviando requisição de login:', { email, password });
             const response = await axios.post(`${API_URL}/login`, { email, password });
             console.log('Resposta do backend:', response.data);
-
-            localStorage.setItem('token', response.data.token);
+    
+            // Armazene apenas o nome de usuário (ou outros dados necessários)
             localStorage.setItem('username', response.data.username);
-
+    
+            // Redirecione para a página inicial
             navigate('/home');
         } catch (err) {
             console.error('Erro na requisição:', err);
